@@ -221,7 +221,8 @@ MonoBehaviour:
   m_PlayerSpawnMethod: 0
   m_OfflineScene: Startup
   m_OnlineScene: Test_Milas
-  m_SpawnPrefabs: []
+  m_SpawnPrefabs:
+  - {fileID: 1635065020958678, guid: 46581e37275f23a4eb3ef351907534ed, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:

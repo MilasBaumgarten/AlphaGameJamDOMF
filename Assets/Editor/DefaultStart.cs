@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.IO;
 using System.Linq;
-using System.Collections;
+using UnityEditor.SceneManagement;
 
 /*	
  * Quelle: https://answers.unity.com/questions/441246/editor-script-to-make-play-always-jump-to-a-start.html
@@ -31,7 +31,7 @@ public class DefaultStart : EditorWindow {
 	void Update() {
 		if (!EditorApplication.isPlaying) {
 			if (null == waitScene && !string.IsNullOrEmpty(lastScene)) {
-				EditorApplication.OpenScene(lastScene);
+				EditorSceneManager.OpenScene(lastScene);
 				lastScene = null;
 			}
 		}
@@ -53,8 +53,8 @@ public class DefaultStart : EditorWindow {
 		if (GUILayout.Button("Play")) {
 			lastScene = EditorApplication.currentScene;
 			waitScene = scenes[targetScene].path;
-			EditorApplication.SaveCurrentSceneIfUserWantsTo();
-			EditorApplication.OpenScene(waitScene);
+			EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
+			EditorSceneManager.OpenScene(waitScene);
 		}
 	}
 

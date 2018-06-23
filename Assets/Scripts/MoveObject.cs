@@ -30,7 +30,7 @@ public class MoveObject : NetworkBehaviour {
 		startPosition = transform.position;
 		startRotation = transform.rotation;
 
-		cursor = GameObject.Find("Cursor");
+		cursor = GameObject.Find("GameCursor");
 	}
 
 	private void Update() {
@@ -54,7 +54,7 @@ public class MoveObject : NetworkBehaviour {
 	void Drag() {
 		RaycastHit hit;
 		Vector3 mousePos;
-		Ray mouseToWorldRay = mainCam.ScreenPointToRay(Input.mousePosition);
+		Ray mouseToWorldRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 		// berechen wohin Object bewegt werden soll
 		if (Physics.Raycast(mouseToWorldRay, out hit, objects.maxDist, objects.collisionLayer)) {
