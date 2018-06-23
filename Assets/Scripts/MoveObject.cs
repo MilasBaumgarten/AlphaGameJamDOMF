@@ -7,18 +7,26 @@ public class MoveObject : MonoBehaviour {
 	bool mouseDragging = false;
 	bool mouseOverObject = false;
 
-	public float maxDist = 3.0f;
-	public LayerMask collisionLayer;
+	public ObjectsSO objects;
 
-	[Header("restrict Object Movement to X and Z Axis")]
-	public bool confineTo2D = false;
+	[Header("Type of Object")]
+	public ObjectType objectType = ObjectType.MOUSE;
 	private float startHeight;
+	private GameObject cursor;
+
+	public enum ObjectType {
+		FREE,
+		MOUSE
+	};
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
 		mainCam = Camera.main;
 		startHeight = transform.position.y;
+
+		cursor = GameObject.Find("Cursor");
+		Debug.Log(cursor);
 	}
 
 	private void Update() {
@@ -36,18 +44,24 @@ public class MoveObject : MonoBehaviour {
 			Vector3 mousePos;
 			Ray mouseToWorldRay = mainCam.ScreenPointToRay(Input.mousePosition);
 
-			if (Physics.Raycast(mouseToWorldRay, out hit, maxDist, collisionLayer)){
+			if (Physics.Raycast(mouseToWorldRay, out hit, objects.maxDist, objects.collisionLayer)){
 				mousePos = hit.point;
 			} else {
-				mousePos = mouseToWorldRay.direction.normalized * maxDist + mainCam.transform.position;
+				mousePos = mouseToWorldRay.direction.normalized * objects.maxDist + mainCam.transform.position;
 			}
 
-			if (confineTo2D) {
-				transform.position = Vector3.ProjectOnPlane(mousePos, Vector3.up) + (startHeight * Vector3.up);
-			} else {
-				transform.position = mousePos;
+			// bewege Objekt abhängig vom Typ
+			switch (objectType) {
+				case (ObjectType.FREE):
+					transform.position = mousePos;
+					break;
+				case (ObjectType.MOUSE):
+					Vector3 nextPos = Vector3.ProjectOnPlane(mousePos, Vector3.up) + (startHeight * Vector3.up);
+					Vector3 movementDelta = nextPos - transform.position;
+					transform.position += movementDelta;
+					cursor.transform.position += new Vector3(movementDelta.x, movementDelta.z, 0);
+					break;
 			}
-
 		} else {
 			rb.useGravity = true;
 		}
@@ -60,5 +74,4 @@ public class MoveObject : MonoBehaviour {
 	private void OnMouseExit() {
 		mouseOverObject = false;
 	}
-
 }
