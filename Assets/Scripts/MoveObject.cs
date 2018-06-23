@@ -5,7 +5,6 @@ public class MoveObject : MonoBehaviour
     Rigidbody rb;
     Camera mainCam;
 
-    public float raiseHeight = 0.1f;
 
     bool mouseDragging = false;
     bool mouseOverObject = false;
@@ -15,7 +14,6 @@ public class MoveObject : MonoBehaviour
     [Header("Type of Object")]
     public ObjectType objectType = ObjectType.MOUSE;
     public float moveBounds;
-    public Vector3 temp;
     private Vector3 startPosition;
     private Quaternion startRotation;
     private GameObject cursor;
@@ -45,14 +43,23 @@ public class MoveObject : MonoBehaviour
             if (Input.GetButtonDown("Fire1"))
             {
                 mouseDragging = !mouseDragging;
+                
+                if (mouseDragging)
+                {
+                    rb.useGravity = false;
+                    gameObject.layer = Physics.IgnoreRaycastLayer;
+                }
+                else
+                {
+                    rb.useGravity = true;
+                    gameObject.layer = 1 << LayerMask.NameToLayer("Default");
+                }
             }
         }
 
         // objekt wird gehalten
         if (mouseDragging)
         {
-            rb.useGravity = false;
-
             RaycastHit hit;
             Vector3 mousePos;
             Ray mouseToWorldRay = mainCam.ScreenPointToRay(Input.mousePosition);
@@ -60,21 +67,18 @@ public class MoveObject : MonoBehaviour
             // berechen wohin Object bewegt werden soll
             if (Physics.Raycast(mouseToWorldRay, out hit, objects.maxDist, objects.collisionLayer))
             {
-                mousePos = hit.point;
+                mousePos = hit.point + Vector3.up * objects.raiseHeight;
             }
             else
             {
-                mousePos = mouseToWorldRay.direction.normalized * objects.maxDist + mainCam.transform.position;
+                mousePos = mouseToWorldRay.direction.normalized * objects.maxDist /2 + mainCam.transform.position + Vector3.up * objects.raiseHeight;
             }
-
-            // Objekt hängt so nicht mehr im Boden fest
-            mousePos.y += GetComponent<BoxCollider>().size.y / 2 + raiseHeight;
 
             // bewege Objekt abhängig vom Typ
             switch (objectType)
             {
                 case (ObjectType.FREE):
-                    transform.position = mousePos;
+                    rb.velocity = (mousePos - transform.position) * objects.followSpeed;
                     break;
                 case (ObjectType.MOUSE):
                     // bewege Maus nur auf Oberfläche
@@ -90,10 +94,6 @@ public class MoveObject : MonoBehaviour
                     }
                     break;
             }
-        }
-        else
-        {
-            rb.useGravity = true;
         }
     }
 
