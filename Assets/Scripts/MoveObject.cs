@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MoveObject : MonoBehaviour {
 	Rigidbody rb;
@@ -9,14 +7,18 @@ public class MoveObject : MonoBehaviour {
 	bool mouseDragging = false;
 	bool mouseOverObject = false;
 
-	public float maxDist = 2.0f;
-	public float moveSpeed = 1.0f;
+	public float maxDist = 3.0f;
 	public LayerMask collisionLayer;
+
+	[Header("restrict Object Movement to X and Z Axis")]
+	public bool confineTo2D = false;
+	private float startHeight;
 
 	// Use this for initialization
 	void Start () {
 		rb = GetComponent<Rigidbody>();
 		mainCam = Camera.main;
+		startHeight = transform.position.y;
 	}
 
 	private void Update() {
@@ -39,7 +41,12 @@ public class MoveObject : MonoBehaviour {
 			} else {
 				mousePos = mouseToWorldRay.direction.normalized * maxDist + mainCam.transform.position;
 			}
-			transform.position = mousePos;
+
+			if (confineTo2D) {
+				transform.position = Vector3.ProjectOnPlane(mousePos, Vector3.up) + (startHeight * Vector3.up);
+			} else {
+				transform.position = mousePos;
+			}
 
 		} else {
 			rb.useGravity = true;
