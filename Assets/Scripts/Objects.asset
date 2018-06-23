@@ -11,8 +11,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32cae1807993d6f4992985661831e450, type: 3}
   m_Name: Objects
   m_EditorClassIdentifier: 
-  cursor: {fileID: 0}
   maxDist: 3
   collisionLayer:
     serializedVersion: 2
     m_Bits: 1
+  mouseSensitivityInGame: 2
+  canvasSize: {x: 4, y: 3}
