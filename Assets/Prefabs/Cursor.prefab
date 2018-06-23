@@ -38,7 +38,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224388677569883438}
   - component: {fileID: 114481413645539424}
-  - component: {fileID: 114666214869617246}
+  - component: {fileID: 114308712125683518}
   m_Layer: 5
   m_Name: Cursor
   m_TagString: Untagged
@@ -87,6 +87,17 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114308712125683518
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1635065020958678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d772073cd0a05fe46ba7952a0314140d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114481413645539424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -119,17 +130,6 @@ MonoBehaviour:
     i15: 237
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 1
---- !u!114 &114666214869617246
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1635065020958678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7bac86885fb5db46b5d14ad9db99ff2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &222965485564216556
 CanvasRenderer:
   m_ObjectHideFlags: 1

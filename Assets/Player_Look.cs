@@ -1,11 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class Player_Look : NetworkBehaviour
-{
-
+public class Player_Look : NetworkBehaviour {
     Camera cam;
     public float screenBounds;
     public float lookBounds;
@@ -13,20 +9,13 @@ public class Player_Look : NetworkBehaviour
     public GameObject cursorPrefab;
 	private GameObject cursor;
 
-    void Start()
-    {
-        cam = Camera.main;
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
+	private void Start() {
+		cam = transform.GetChild(0).GetComponent<Camera>();
+		CmdSpawnCursor();
+	}
 
-		if (isLocalPlayer) {
-			CmdSpawnCursor();
-			RpcSyncBlockOnce(cursor.transform.localPosition, cursor.transform.localRotation, cursor, GameObject.Find("Canvas"));
-		}
-    }
-
-    void Update()
-    {
+	[ClientCallback]
+	void Update() {
 		if (isLocalPlayer) {
 			Vector2 pos = cam.ScreenToViewportPoint(Input.mousePosition);
 
@@ -38,19 +27,20 @@ public class Player_Look : NetworkBehaviour
 			}
 
 			cursor.transform.position = new Vector3(pos.x * Screen.width, pos.y * Screen.height, 0.0f);
+		} else {
+			gameObject.SetActive(false);
 		}
     }
 
 	[Command]
 	void CmdSpawnCursor() {
 		cursor = Instantiate(cursorPrefab);
-		NetworkServer.Spawn(cursor);
-	}
+		cursor.GetComponent<PlayerCursor>().parentNetId = GameObject.Find("Canvas").GetComponent<NetworkIdentity>().netId; // Set the parent network ID
+		cursor.transform.parent = GameObject.Find("Canvas").transform; // Set the parent transform on the server
 
-	[ClientRpc]
-	public void RpcSyncBlockOnce(Vector3 localPos, Quaternion localRot, GameObject gameObject, GameObject parent) {
-		gameObject.transform.parent = parent.transform;
-		gameObject.transform.localPosition = localPos;
-		gameObject.transform.localRotation = localRot;
+		NetworkServer.Spawn(cursor); // Spawn the object
+
+		//cursor = Instantiate(cursorPrefab, GameObject.Find("Canvas").transform);
+		//NetworkServer.Spawn(cursor);
 	}
 }
