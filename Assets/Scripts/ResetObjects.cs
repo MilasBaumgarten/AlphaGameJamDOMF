@@ -5,6 +5,6 @@ using UnityEngine;
 public class ResetObjects : MonoBehaviour {
 
 	private void OnCollisionEnter(Collision collision) {
-		collision.collider.GetComponent<MoveObject>().Reset();
+		collision.collider.GetComponent<MoveObject>().ResetPos();
 	}
 }
