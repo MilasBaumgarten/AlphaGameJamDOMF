@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class MoveObject : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class MoveObject : MonoBehaviour
     [Header("Type of Object")]
     public ObjectType objectType = ObjectType.MOUSE;
     public float moveBounds;
+    public UnityEvent PickUpToggle;
     private Vector3 startPosition;
     private Quaternion startRotation;
     private GameObject cursor;
@@ -43,7 +45,8 @@ public class MoveObject : MonoBehaviour
             if (Input.GetButtonDown("Fire1"))
             {
                 mouseDragging = !mouseDragging;
-                
+                PickUpToggle.Invoke();
+
                 if (mouseDragging)
                 {
                     rb.useGravity = false;
