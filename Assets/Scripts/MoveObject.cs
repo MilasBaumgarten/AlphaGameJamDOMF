@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 public class MoveObject : MonoBehaviour
 {
     Rigidbody rb;
     Camera mainCam;
 
-
-    bool mouseDragging = false;
+    [HideInInspector]
+    public bool mouseDragging = false;
     bool mouseOverObject = false;
 
     public ObjectsSO objects;
@@ -14,6 +15,7 @@ public class MoveObject : MonoBehaviour
     [Header("Type of Object")]
     public ObjectType objectType = ObjectType.MOUSE;
     public float moveBounds;
+    public UnityEvent PickUpToggle;
     private Vector3 startPosition;
     private Quaternion startRotation;
     private GameObject cursor;
@@ -37,17 +39,20 @@ public class MoveObject : MonoBehaviour
 
     private void Update()
     {
+        Ray mouseToWorldRay = mainCam.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
         // Objekt halten/ loslassen
         if (mouseOverObject || mouseDragging)
         {
             if (Input.GetButtonDown("Fire1"))
             {
                 mouseDragging = !mouseDragging;
-                
+                PickUpToggle.Invoke();
+
                 if (mouseDragging)
                 {
                     rb.useGravity = false;
-                    gameObject.layer = Physics.IgnoreRaycastLayer;
+                    gameObject.layer = 1 << LayerMask.NameToLayer("Ignore Raycast");
                 }
                 else
                 {
@@ -60,10 +65,7 @@ public class MoveObject : MonoBehaviour
         // objekt wird gehalten
         if (mouseDragging)
         {
-            RaycastHit hit;
             Vector3 mousePos;
-            Ray mouseToWorldRay = mainCam.ScreenPointToRay(Input.mousePosition);
-
             // berechen wohin Object bewegt werden soll
             if (Physics.Raycast(mouseToWorldRay, out hit, objects.maxDist, objects.collisionLayer))
             {
@@ -71,7 +73,7 @@ public class MoveObject : MonoBehaviour
             }
             else
             {
-                mousePos = mouseToWorldRay.direction.normalized * objects.maxDist /2 + mainCam.transform.position + Vector3.up * objects.raiseHeight;
+                mousePos = mouseToWorldRay.direction.normalized * objects.maxDist / 2 + mainCam.transform.position + Vector3.up * objects.raiseHeight;
             }
 
             // bewege Objekt abhängig vom Typ
@@ -90,7 +92,7 @@ public class MoveObject : MonoBehaviour
                         dir.z = Mathf.Clamp(dir.z, -moveBounds, moveBounds);
                         transform.position = dir + startPosition;
                         // bewege Cursor
-                        cursor.transform.localPosition = new Vector3((dir.x/moveBounds) * (objects.canvasSize.x/2), (dir.z/moveBounds) * (objects.canvasSize.y/2), 0);
+                        cursor.transform.localPosition = new Vector3((dir.x / moveBounds) * (objects.canvasSize.x / 2), (dir.z / moveBounds) * (objects.canvasSize.y / 2), 0);
                     }
                     break;
             }
