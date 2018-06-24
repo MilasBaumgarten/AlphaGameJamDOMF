@@ -12,102 +12,47 @@ public class EventHandler : MonoBehaviour
     public UnityEvent OnMouseButtonPressed;
     public UnityEvent OnMonitorClicked;
     public UnityEvent OnGenericInteracted;
+    public UnityEvent OnKeyBoardKeyPressed;
 
-    public void HandleInteraction(Interaction obj)
-    {
-        switch (obj.type)
-        {
-            case ("KeyBoardKey"):
-                {
-                    HandleKeyBoardKey(obj.key);
-                    break;
-                }
-            case ("MonitorButton"):
-                {
-                    HandleMonitorButton();
-                    break;
-                }
-            case ("FloppyDriveButton"):
-                {
-                    HandleFloppyDriveButton();
-                    break;
-                }
-            case ("DiskDriveButton"):
-                {
-                    HandleDiskDriveButton();
-                    break;
-                }
-            case ("DesktopPowerButton"):
-                {
-                    HandleDesktopPowerButton();
-                    break;
-                }
-            case ("MouseButton"):
-                {
-                    HandleMouseButton();
-                    break;
-                }
-            case ("MonitorScreen"):
-                {
-                    HandleMonitorScreen();
-                    break;
-                }
-            case ("Generic"):
-                {
-                    HandleGeneric();
-                    break;
-                }
-            default:
-                {
-                    Debug.LogError(obj.name + " Has no type!");
-                    break;
-                }
-        }
-    }
+    private KeyCode key;
 
-    void HandleKeyBoardKey(KeyCode key)
-    {
-        switch (key)
-        {
-            default:
-                {
-                    Debug.Log("The Button " + key.ToString() + " has been pressed.");
-                    break;
-                }
-        }
-    }
-
-    void HandleMonitorButton()
+    public void HandleMonitorButton()
     {
         OnMonitorButtonPressed.Invoke();
     }
 
-    void HandleFloppyDriveButton()
+    public void HandleFloppyDriveButton()
     {
         OnFloppyDriveButtonPressed.Invoke();
     }
 
-    void HandleDiskDriveButton()
+    public void HandleDiskDriveButton()
     {
         OnDiskDriveButtonPressed.Invoke();
     }
 
-    void HandleDesktopPowerButton()
+    public void HandleDesktopPowerButton()
     {
         OnDesktopPowerButtonPressed.Invoke();
     }
 
-    void HandleMouseButton()
+    public void HandleMouseButton()
     {
         OnMouseButtonPressed.Invoke();
     }
 
-    void HandleMonitorScreen()
+    public void HandleMonitorScreen()
     {
         OnMonitorClicked.Invoke();
     }
 
-    void HandleGeneric()
+    public void HandleKeyboardKey(Interaction x)
+    {
+        key = x.key;
+        OnKeyBoardKeyPressed.Invoke();
+    }
+
+    public void HandleGeneric()
     {
         OnGenericInteracted.Invoke();
     }
