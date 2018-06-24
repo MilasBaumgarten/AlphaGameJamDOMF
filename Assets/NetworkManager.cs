@@ -7,7 +7,9 @@ public class NetworkManager : Photon.PunBehaviour {
 	public PhotonLogLevel loglevel = PhotonLogLevel.Full;
 	bool connectedToRoom = false;
 	string gameVersion = "1";
-	bool isLoaded;
+	bool isLoaded = false;
+	public GameObject playerPrefab;
+
 
 	private void Awake() {
 		PhotonNetwork.logLevel = loglevel;
@@ -16,6 +18,7 @@ public class NetworkManager : Photon.PunBehaviour {
 	}
 
 	private void Start() {
+
 		if (PhotonNetwork.connected) {
 			PhotonNetwork.JoinRandomRoom();
 		} else {
@@ -52,6 +55,12 @@ public class NetworkManager : Photon.PunBehaviour {
 			PhotonNetwork.LoadLevel(1);
 			isLoaded = true;
 		}
+	}
+
+	public override void OnJoinedRoom() {
+		// Spawn player
+		GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, playerPrefab.transform.position, playerPrefab.transform.rotation, 0);
+		DontDestroyOnLoad(player);
 	}
 
 	private void OnApplicationQuit() {

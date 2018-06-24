@@ -30,14 +30,33 @@ public class MoveObject : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        mainCam = Camera.main;
+        mainCam = GameObject.Find("Main Camera").GetComponent<Camera>();	// wird nicht erkannt
         startPosition = transform.position;
         startRotation = transform.rotation;
 
-        cursor = GameObject.Find("Cursor");
+        cursor = GameObject.Find("InGameCursor");
     }
 
-    private void Update()
+	private float lastSynchronizationTime = 0f;
+	private float syncDelay = 0f;
+	private float syncTime = 0f;
+	private Vector3 syncStartPosition = Vector3.zero;
+	private Vector3 syncEndPosition = Vector3.zero;
+
+	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+		if (stream.isWriting) {
+			stream.SendNext(transform.position);
+		} else {
+			syncEndPosition = (Vector3)stream.ReceiveNext();
+			syncStartPosition = transform.position;
+
+			syncTime = 0f;
+			syncDelay = Time.time - lastSynchronizationTime;
+			lastSynchronizationTime = Time.time;
+		}
+	}
+
+	private void Update()
     {
         // Objekt halten/ loslassen
         if (mouseOverObject || mouseDragging)

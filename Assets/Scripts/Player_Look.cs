@@ -15,7 +15,7 @@ public class Player_Look : MonoBehaviour
 
     void Start()
     {
-        cam = Camera.main;
+		cam = transform.GetChild(0).GetComponent<Camera>();//Camera.main;
         defaultCamPos = cam.transform.position;
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = cursorVisibility;
