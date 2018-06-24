@@ -107,7 +107,7 @@ public class MoveObject : MonoBehaviour
         mouseOverObject = false;
     }
 
-    public void Reset()
+    public void ResetPos()
     {
         Debug.Log(this.gameObject.name + " RESET");
         this.transform.position = startPosition;
